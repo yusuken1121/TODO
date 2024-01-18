@@ -8,6 +8,11 @@ const onClickAdd = () => {
   const inputText = document.getElementById("add-text").value;
   document.getElementById("add-text").value = null;
 
+  createIncompleteTodo(inputText);
+};
+
+//create a todo from the inputed incomplete stuff
+const createIncompleteTodo = (todo) => {
   // getnerate li
   const li = document.createElement("li");
 
@@ -18,25 +23,41 @@ const onClickAdd = () => {
   // generate p
   const p = document.createElement("p");
   p.className = "one-todo";
-  p.innerText = inputText;
+  p.innerText = todo;
 
   // generate completed button
   const completeButton = document.createElement("button");
   completeButton.innerText = "completed";
 
+  // the function when the completed button is pressed
   completeButton.addEventListener("click", () => {
     //delete "delete" and "completed" button
     const moveTarget = completeButton.closest("li");
     completeButton.nextElementSibling.remove();
     completeButton.remove();
+
+    //generate "back" button
+    const backButton = document.createElement("button");
+    backButton.innerText = "Back";
+    backButton.addEventListener("click", () => {
+      //get the todo and add the incompletearea
+      const todoText = backButton.previousElementSibling.innerText;
+      createIncompleteTodo(todoText);
+      backButton.closest("li").remove();
+    });
+    moveTarget.firstElementChild.appendChild(backButton);
+
+    //move "todo" & "back"button
+    const completeArea = document.getElementById("completed-area");
+    completeArea.appendChild(moveTarget);
   });
 
   // generate delete button
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "Delete";
 
+  // the function of deleteButton
   deleteButton.addEventListener("click", () => {
-    // add a delete function
     const deleteTarget = deleteButton.closest("li");
     document.getElementById("incomplete-area").removeChild(deleteTarget);
   });
@@ -52,5 +73,3 @@ const onClickAdd = () => {
 };
 
 document.getElementById("add-button").addEventListener("click", onClickAdd);
-
-// abc
